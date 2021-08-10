@@ -8,14 +8,15 @@
 * 
 * YOU CAN USE GLOBAL VARIABLES - THEY WILL EXIST BETWEEN "dllload" and "dllunload" calls from BTBasic testplan.
 * 
-* YOU CANNOT DEREFERENCE THE "returnValue" PARAMETER, IT IS AUTOMATICALLY FILLED WITH THE ENUM RETURN TYPE.
+* YOU CANNOT DEREFERENCE THE "returnValue" PARAMETER, IT IS SET ONLY BY THE BTBasic HOST PROCESS WITH THE ENUM RETURN TYPE.
+* The "returnValue" can be used from MCD only.
 *
 * DEFAULT "returnValue" FROM "BTBasic_DLL_Call" function is "EXT_DLL_Result::EXT_DLL_Result_Error", 
 * RETRUN "EXT_DLL_Result::EXT_DLL_Result_OK" ONLY WHEN YOUR CONDITIONS ARE MET.
 * 
 * YOU CAN RETURN INFO TO BTBasic TESTPLAN ONLY WITH "returnString", MAXIMUM 2048 BYTES.
 * 
-* DO NOT CHANGE THE "BTBasic_DLL_Call" FUNCTION SIGNATURE OR REDEFINE THE ENUM "EXT_DLL_Result" FROM THE HEADER.
+* DO NOT CHANGE THE "BTBasic_DLL_Call" FUNCTION SIGNATURE OR REDEFINE / MODIFY THE ENUM "EXT_DLL_Result" FROM THE HEADER.
 * 
 */
 
@@ -89,7 +90,6 @@ DllExport EXT_DLL_Result BTBasic_DLL_Call(char* functionName, char* parameters,
 		messageToReturn = "Function does not exist!";
 		sizeOfMessage = strlen(messageToReturn) + 1;
 		strcpy_s(returnString, sizeOfMessage, messageToReturn);
-
 		return EXT_DLL_Result::EXT_DLL_Result_Error;
 	}
 }
