@@ -1,6 +1,3 @@
-#include "BTBasic_Wrapper_DLL.h"
-#include <iostream>
-#include <string>
 /*
 * !!!READ ME!!!!
 * 
@@ -19,77 +16,43 @@
 * DO NOT CHANGE THE "BTBasic_DLL_Call" FUNCTION SIGNATURE OR REDEFINE / MODIFY THE ENUM "EXT_DLL_Result" FROM THE HEADER.
 * 
 */
+#include "lib.h"
+#include "BTBasic_Wrapper_DLL.h"
 
-const bool debugMode = false;
+extern void copyReturnString(const char* input, char* retString);
+extern std::vector<std::string> parse_C_style_str(char* input);
 
 DllExport EXT_DLL_Result BTBasic_DLL_Call(char* functionName, char* parameters,
 	char* returnString, int* returnValue)
 {
-	//Spilt the parameters from BTBasic testplan into an array, similar to UNIX command arguments(argc, argv)
-    char* next = parameters;
-	char* tokens = strtok_s(parameters, ",", &next);
-	int argc = 0;//count number of arguments below
-	char* argv[16] = { NULL };//allow max 16 items as parameters
 	const char* messageToReturn = nullptr;
 	size_t sizeOfMessage{};
 
-	while (tokens != NULL && next != NULL)
-	{
-		argv[argc] = tokens;
-		tokens = strtok_s(next, ",", &next);
-		argc++;
-	}
+	std::vector<std::string> params = parse_C_style_str(parameters);
 
 	//Handle each function here
-	if (strcmp(functionName, "Load") == 0)
+	if (strcmp(functionName, "FirstParameter") == 0)
 	{
-		if (true)
-		{
-			messageToReturn = "Loaded!";
-			sizeOfMessage = strlen(messageToReturn) + 1;
-			strcpy_s(returnString, sizeOfMessage, messageToReturn);
-
-			return EXT_DLL_Result::EXT_DLL_Result_OK;
-		}
-
-		messageToReturn = "Your custom error message for BTBasic.";
-		sizeOfMessage = strlen(messageToReturn) + 1;
-		strcpy_s(returnString, sizeOfMessage, messageToReturn);
-
-		return EXT_DLL_Result::EXT_DLL_Result_Error;
-	}
-	else if (strcmp(functionName, "String") == 0)
-	{
-		std::string stringExample = "String example from C++";
-
-		messageToReturn = stringExample.c_str();
-		sizeOfMessage = strlen(messageToReturn) + 1;
-		strcpy_s(returnString, sizeOfMessage, messageToReturn);
-
+		copyReturnString(params.at(0).c_str(), returnString);
 		return EXT_DLL_Result::EXT_DLL_Result_OK;
 	}
-	else if (strcmp(functionName, "Parameter_0") == 0)
+	else if (strcmp(functionName, "Test") == 0)
 	{
-		if (argv[0] != nullptr)
-		{
-			messageToReturn = argv[0];
-			sizeOfMessage = strlen(messageToReturn) + 1;
-			strcpy_s(returnString, sizeOfMessage, messageToReturn);
-			return EXT_DLL_Result::EXT_DLL_Result_OK;
-		}
-		else
-		{
-			messageToReturn = "Parameter is null.";
-			sizeOfMessage = strlen(messageToReturn) + 1;
-			strcpy_s(returnString, sizeOfMessage, messageToReturn);
-			return EXT_DLL_Result::EXT_DLL_Result_Error;
-		}
+		copyReturnString("Test function executed", returnString);
+		return EXT_DLL_Result::EXT_DLL_Result_OK;
 	}
 	else
 	{
-		messageToReturn = "Function does not exist!";
-		sizeOfMessage = strlen(messageToReturn) + 1;
-		strcpy_s(returnString, sizeOfMessage, messageToReturn);
+		copyReturnString("Function does not exist!", returnString);
 		return EXT_DLL_Result::EXT_DLL_Result_Error;
 	}
+
+	/*
+	* DO NOT REMOVE
+	* Function should not reach this state
+	* Secure the return of the function in case programmer messes with the if block above
+	*/
+	copyReturnString("Default return state reached, please chack the wrapper DLL return paths", returnString);
+	return EXT_DLL_Result::EXT_DLL_Result_Error;
 }
+

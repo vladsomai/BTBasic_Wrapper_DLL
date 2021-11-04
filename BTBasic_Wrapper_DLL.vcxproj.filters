@@ -18,9 +18,15 @@
     <ClCompile Include="BTBasic_Wrapper_DLL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="utility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BTBasic_Wrapper_DLL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
